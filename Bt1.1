@@ -1,0 +1,103 @@
+using System;
+
+namespace BankAccountManagement
+{
+    class BankAccount
+    {
+        private static long _nextAccountNumber = 1000000001;
+        private const decimal MIN_BALANCE = 50000m;
+
+        private string _accountHolder;
+        private decimal _balance;
+
+        public long AccountNumber { get; private set; }
+
+        public string AccountHolder
+        {
+            get
+            {
+                return _accountHolder;
+            }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException("Tên chủ tài khoản không được để trống!");
+                }
+
+                _accountHolder = value;
+            }
+        }
+
+        public decimal Balance
+        {
+            get
+            {
+                return _balance;
+            }
+            private set
+            {
+                _balance = value;
+            }
+        }
+
+        public BankAccount(string accountHolder, decimal initialBalance)
+        {
+            if (initialBalance < MIN_BALANCE)
+            {
+                throw new ArgumentException(
+                    "Số dư ban đầu phải từ 50.000 VNĐ trở lên!"
+                );
+            }
+
+            AccountNumber = _nextAccountNumber;
+            _nextAccountNumber++;
+
+            AccountHolder = accountHolder;
+            Balance = initialBalance;
+        }
+
+        public void Deposit(decimal amount)
+        {
+            if (amount <= 0)
+            {
+                throw new ArgumentException("Số tiền nạp phải lớn hơn 0!");
+            }
+
+            Balance += amount;
+            Console.WriteLine($"Nạp {amount:N0} VNĐ thành công!");
+        }
+
+        public bool Withdraw(decimal amount)
+        {
+            if (amount <= 0)
+            {
+                Console.WriteLine("Số tiền rút phải lớn hơn 0!");
+                return false;
+            }
+
+            if (Balance - amount < MIN_BALANCE)
+            {
+                Console.WriteLine(
+                    "Rút thất bại! Phải duy trì tối thiểu 50.000 VNĐ."
+                );
+
+                return false;
+            }
+
+            Balance -= amount;
+            Console.WriteLine($"Rút {amount:N0} VNĐ thành công!");
+
+            return true;
+        }
+
+        public void DisplayInfo()
+        {
+            Console.WriteLine("==============================");
+            Console.WriteLine($"Số tài khoản : {AccountNumber}");
+            Console.WriteLine($"Chủ tài khoản: {AccountHolder}");
+            Console.WriteLine($"Số dư        : {Balance:N0} VNĐ");
+            Console.WriteLine("==============================");
+        }
+    }
+}
