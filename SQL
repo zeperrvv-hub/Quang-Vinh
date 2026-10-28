@@ -1,0 +1,33 @@
+CREATE TABLE IF NOT EXISTS courses (
+    course_id SERIAL PRIMARY KEY,
+    course_name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS registrations (
+    registration_id SERIAL PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    birth_date DATE NOT NULL,
+    gender VARCHAR(10) NOT NULL,
+    course_id INT REFERENCES courses(course_id),
+    study_mode VARCHAR(30) NOT NULL,
+    registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO courses (course_name)
+SELECT 'Lập trình C#'
+WHERE NOT EXISTS (
+    SELECT 1 FROM courses WHERE course_name = 'Lập trình C#'
+);
+
+INSERT INTO courses (course_name)
+SELECT 'Lập trình Java'
+WHERE NOT EXISTS (
+    SELECT 1 FROM courses WHERE course_name = 'Lập trình Java'
+);
+
+INSERT INTO courses (course_name)
+SELECT 'Cơ sở dữ liệu'
+WHERE NOT EXISTS (
+    SELECT 1 FROM courses WHERE course_name = 'Cơ sở dữ liệu'
+);
